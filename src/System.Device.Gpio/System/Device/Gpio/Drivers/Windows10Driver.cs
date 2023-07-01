@@ -23,7 +23,7 @@ public class Windows10Driver : GpioDriver
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            throw new PlatformNotSupportedException(GetType().Name + " is only supported on Windows");
+            throw new PlatformNotSupportedException(nameof(Windows10Driver) + " is only supported on Windows");
         }
 
         if (s_winGpioController == null)
@@ -108,7 +108,7 @@ public class Windows10Driver : GpioDriver
             return;
         }
 
-        if (pinNumber < 0 || pinNumber >= PinCount)
+        if ((uint)pinNumber >= (uint)PinCount)
         {
             throw new ArgumentOutOfRangeException(nameof(pinNumber));
         }

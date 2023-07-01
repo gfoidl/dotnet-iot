@@ -27,7 +27,7 @@ public class GpioController : IDisposable
     private const string RaspberryPi3Product = "Raspberry Pi 3";
 
     private const string HummingBoardProduct = "HummingBoard-Edge";
-    private const string HummingBoardHardware = @"Freescale i.MX6 Quad/DualLite (Device Tree)";
+    private const string HummingBoardHardware = "Freescale i.MX6 Quad/DualLite (Device Tree)";
 
     /// <summary>
     /// If a pin element exists, that pin is open. Uses current controller's numbering scheme
@@ -112,8 +112,9 @@ public class GpioController : IDisposable
 
         OpenPinCore(pinNumber);
         _openPins.TryAdd(pinNumber, null);
-        _gpioPins[pinNumber] = new GpioPin(pinNumber, _driver);
-        return _gpioPins[pinNumber];
+        GpioPin pin = new GpioPin(pinNumber, _driver);
+        _gpioPins[pinNumber] = pin;
+        return pin;
     }
 
     /// <summary>
@@ -419,6 +420,7 @@ public class GpioController : IDisposable
     public void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -471,7 +473,7 @@ public class GpioController : IDisposable
     {
         RaspberryPi3LinuxDriver? internalDriver = RaspberryPi3Driver.CreateInternalRaspberryPi3LinuxDriver(out _);
 
-        if (internalDriver is object)
+        if (internalDriver is not null)
         {
             return new RaspberryPi3Driver(internalDriver);
         }

@@ -132,7 +132,7 @@ internal class Windows10DriverPin : IDisposable
             };
 
             _pin.ValueChanged += Handler;
-            bool eventOccurred = 0 == WaitHandle.WaitAny(waitHandles);
+            bool eventOccurred = WaitHandle.WaitAny(waitHandles) == 0;
             _pin.ValueChanged -= Handler;
 
             return new WaitForEventResult

@@ -26,6 +26,7 @@ internal struct epoll_event
     public epoll_data data;
 }
 
+[Flags]
 internal enum PollEvents : uint
 {
     EPOLLIN = 0x01,

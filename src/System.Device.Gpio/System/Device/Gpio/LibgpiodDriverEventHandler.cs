@@ -20,7 +20,7 @@ internal sealed class LibGpiodDriverEventHandler : IDisposable
     private readonly int _pinNumber;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly Task _task;
-    private bool _disposing;
+    private volatile bool _disposing;
 
     public LibGpiodDriverEventHandler(int pinNumber, SafeLineHandle safeLineHandle)
     {
@@ -78,7 +78,7 @@ internal sealed class LibGpiodDriverEventHandler : IDisposable
                     }
 
                     PinEventTypes eventType = (eventResult.event_type == 1) ? PinEventTypes.Rising : PinEventTypes.Falling;
-                    this?.OnPinValueChanged(new PinValueChangedEventArgs(eventType, _pinNumber), eventType);
+                    OnPinValueChanged(new PinValueChangedEventArgs(eventType, _pinNumber), eventType);
                 }
             }
         }, token);

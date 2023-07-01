@@ -63,9 +63,9 @@ public readonly struct PinValue : IEquatable<PinValue>
     /// <inheritdoc cref="ValueType.Equals(object)"/>
     public override bool Equals(object? obj)
     {
-        if (obj is PinValue)
+        if (obj is PinValue pinValue)
         {
-            return Equals((PinValue)obj);
+            return Equals(pinValue);
         }
 
         return false;

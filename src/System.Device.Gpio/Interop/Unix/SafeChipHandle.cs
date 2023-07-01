@@ -8,7 +8,7 @@ namespace System.Device.Gpio;
 /// <summary>
 /// Pointer to a general-purpose I/O (GPIO) chip.
 /// </summary>
-internal class SafeChipHandle : SafeHandle
+internal sealed class SafeChipHandle : SafeHandle
 {
     public SafeChipHandle()
         : base(IntPtr.Zero, true)

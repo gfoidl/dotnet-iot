@@ -197,33 +197,23 @@ public class SysFsDriver : UnixDriver
 
     private string ConvertPinModeToSysFsMode(PinMode mode)
     {
-        if (mode == PinMode.Input)
+        return mode switch
         {
-            return "in";
-        }
-
-        if (mode == PinMode.Output)
-        {
-            return "out";
-        }
-
-        throw new PlatformNotSupportedException($"{mode} is not supported by this driver.");
+            PinMode.Input => "in",
+            PinMode.Output => "out",
+            _ => throw new PlatformNotSupportedException($"{mode} is not supported by this driver.")
+        };
     }
 
     private PinMode ConvertSysFsModeToPinMode(string sysFsMode)
     {
         sysFsMode = sysFsMode.Trim();
-        if (sysFsMode == "in")
+        return sysFsMode switch
         {
-            return PinMode.Input;
-        }
-
-        if (sysFsMode == "out")
-        {
-            return PinMode.Output;
-        }
-
-        throw new ArgumentException($"Unable to parse {sysFsMode} as a PinMode.");
+            "in" => PinMode.Input,
+            "out" => PinMode.Output,
+            _ => throw new ArgumentException($"Unable to parse {sysFsMode} as a PinMode.")
+        };
     }
 
     /// <summary>
@@ -308,12 +298,7 @@ public class SysFsDriver : UnixDriver
     protected internal override bool IsPinModeSupported(int pinNumber, PinMode mode)
     {
         // Unix driver does not support pull up or pull down resistors.
-        if (mode == PinMode.InputPullDown || mode == PinMode.InputPullUp)
-        {
-            return false;
-        }
-
-        return true;
+        return mode != PinMode.InputPullDown && mode != PinMode.InputPullUp;
     }
 
     /// <summary>

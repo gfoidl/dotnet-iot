@@ -15,7 +15,7 @@ public abstract class UnixDriver : GpioDriver
     {
         if (Environment.OSVersion.Platform != PlatformID.Unix)
         {
-            throw new PlatformNotSupportedException(GetType().Name + " is only supported on Linux/Unix");
+            throw new PlatformNotSupportedException(nameof(UnixDriver) + " is only supported on Linux/Unix");
         }
     }
 

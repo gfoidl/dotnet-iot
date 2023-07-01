@@ -12,8 +12,8 @@ namespace System.Device.Gpio.Drivers;
 /// </summary>
 public class RaspberryPi3Driver : GpioDriver
 {
+    private readonly RaspberryPi3LinuxDriver? _linuxDriver;
     private GpioDriver _internalDriver;
-    private RaspberryPi3LinuxDriver? _linuxDriver;
 
     /* private delegates for register Properties */
     private delegate void Set_Register(ulong value);

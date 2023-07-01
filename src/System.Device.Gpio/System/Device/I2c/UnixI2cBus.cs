@@ -87,7 +87,7 @@ internal class UnixI2cBus : I2cBus
 
     internal unsafe void Read(int deviceAddress, Span<byte> buffer)
     {
-        if (deviceAddress < 0 || deviceAddress > ushort.MaxValue)
+        if ((uint)deviceAddress > ushort.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(deviceAddress));
         }
@@ -110,7 +110,7 @@ internal class UnixI2cBus : I2cBus
 
     internal unsafe void Write(int deviceAddress, ReadOnlySpan<byte> buffer)
     {
-        if (deviceAddress < 0 || deviceAddress > ushort.MaxValue)
+        if ((uint)deviceAddress > ushort.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(deviceAddress));
         }
@@ -128,7 +128,7 @@ internal class UnixI2cBus : I2cBus
 
     internal unsafe void WriteRead(int deviceAddress, ReadOnlySpan<byte> writeBuffer, Span<byte> readBuffer)
     {
-        if (deviceAddress < 0 || deviceAddress > ushort.MaxValue)
+        if ((uint)deviceAddress > ushort.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(deviceAddress));
         }

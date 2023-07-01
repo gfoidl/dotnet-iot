@@ -9,22 +9,20 @@ internal static partial class Interop
 {
     public static TResult? WaitForCompletion<TResult>(this IAsyncOperation<TResult> operation)
     {
-        using (var waitEvent = new ManualResetEvent(false))
+        using var waitEvent = new ManualResetEventSlim(false);
+        operation.Completed += (i, s) => waitEvent.Set();
+
+        if (operation.Status == AsyncStatus.Started)
         {
-            operation.Completed += (i, s) => waitEvent.Set();
-
-            if (operation.Status == AsyncStatus.Started)
-            {
-                waitEvent.WaitOne();
-            }
-
-            return operation.Status switch
-            {
-                AsyncStatus.Canceled => default,
-                AsyncStatus.Completed => operation.GetResults(),
-                AsyncStatus.Error => throw operation.ErrorCode,
-                _ => throw new InvalidOperationException($"Unexpected asynchronous operation state: {operation.Status}")
-            };
+            waitEvent.Wait();
         }
+
+        return operation.Status switch
+        {
+            AsyncStatus.Canceled => default,
+            AsyncStatus.Completed => operation.GetResults(),
+            AsyncStatus.Error => throw operation.ErrorCode,
+            _ => throw new InvalidOperationException($"Unexpected asynchronous operation state: {operation.Status}")
+        };
     }
 }

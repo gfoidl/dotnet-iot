@@ -8,7 +8,7 @@ namespace System.Device.Gpio;
 /// <summary>
 /// Pointer to a pin.
 /// </summary>
-internal class SafeLineHandle : SafeHandle
+internal sealed class SafeLineHandle : SafeHandle
 {
     public PinMode PinMode { get; set; }
 

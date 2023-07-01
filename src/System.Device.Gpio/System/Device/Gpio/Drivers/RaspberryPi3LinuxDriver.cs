@@ -59,7 +59,7 @@ internal unsafe class RaspberryPi3LinuxDriver : GpioDriver
 
     private void ValidatePinNumber(int pinNumber)
     {
-        if (pinNumber < 0 || pinNumber >= PinCount)
+        if ((uint)pinNumber >= (uint)PinCount)
         {
             throw new ArgumentException("The specified pin number is invalid.", nameof(pinNumber));
         }
@@ -165,7 +165,7 @@ internal unsafe class RaspberryPi3LinuxDriver : GpioDriver
     /// </summary>
     /// <param name="pinNumber">The pin number in the driver's logical numbering scheme.</param>
     /// <returns>The value of the pin.</returns>
-    protected internal unsafe override PinValue Read(int pinNumber)
+    protected internal override PinValue Read(int pinNumber)
     {
         ValidatePinNumber(pinNumber);
 
@@ -174,8 +174,8 @@ internal unsafe class RaspberryPi3LinuxDriver : GpioDriver
          * different pins. 1 bit represents the value of a pin, 0 is PinValue.Low and 1 is PinValue.High
          */
 
-        uint register = _registerViewPointer->GPLEV[pinNumber / 32];
-        return Convert.ToBoolean((register >> (pinNumber % 32)) & 1) ? PinValue.High : PinValue.Low;
+        uint register = _registerViewPointer->GPLEV[(uint)pinNumber / 32];
+        return Convert.ToBoolean((register >> (int)((uint)pinNumber % 32)) & 1) ? PinValue.High : PinValue.Low;
     }
 
     /// <inheritdoc/>
@@ -485,29 +485,19 @@ internal unsafe class RaspberryPi3LinuxDriver : GpioDriver
         // get the three bits of the register
         register = (register >> shift) & 0b111;
 
-        switch (register)
+        return register switch
         {
-            case 0b000:
-                // Input
-                return RaspberryPi3Driver.AltMode.Input;
-            case 0b001:
-                return RaspberryPi3Driver.AltMode.Output;
-            case 0b100:
-                return RaspberryPi3Driver.AltMode.Alt0;
-            case 0b101:
-                return RaspberryPi3Driver.AltMode.Alt1;
-            case 0b110:
-                return RaspberryPi3Driver.AltMode.Alt2;
-            case 0b111:
-                return RaspberryPi3Driver.AltMode.Alt3;
-            case 0b011:
-                return RaspberryPi3Driver.AltMode.Alt4;
-            case 0b010:
-                return RaspberryPi3Driver.AltMode.Alt5;
-        }
-
-        // This cannot happen.
-        throw new InvalidOperationException("Invalid register value");
+            0b000 => RaspberryPi3Driver.AltMode.Input, // Input
+            0b001 => RaspberryPi3Driver.AltMode.Output,
+            0b100 => RaspberryPi3Driver.AltMode.Alt0,
+            0b101 => RaspberryPi3Driver.AltMode.Alt1,
+            0b110 => RaspberryPi3Driver.AltMode.Alt2,
+            0b111 => RaspberryPi3Driver.AltMode.Alt3,
+            0b011 => RaspberryPi3Driver.AltMode.Alt4,
+            0b010 => RaspberryPi3Driver.AltMode.Alt5,
+            // This cannot happen.
+            _ => throw new InvalidOperationException("Invalid register value"),
+        };
     }
 
     /// <summary>
@@ -559,9 +549,9 @@ internal unsafe class RaspberryPi3LinuxDriver : GpioDriver
          * the desired value.
          */
 
-        uint* registerPointer = (value == PinValue.High) ? &_registerViewPointer->GPSET[pinNumber / 32] : &_registerViewPointer->GPCLR[pinNumber / 32];
+        uint* registerPointer = (value == PinValue.High) ? &_registerViewPointer->GPSET[(uint)pinNumber / 32] : &_registerViewPointer->GPCLR[(uint)pinNumber / 32];
         uint register = *registerPointer;
-        register = 1U << (pinNumber % 32);
+        register = 1U << (int)((uint)pinNumber % 32);
         *registerPointer = register;
     }
 

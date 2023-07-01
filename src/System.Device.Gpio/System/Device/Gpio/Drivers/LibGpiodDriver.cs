@@ -34,10 +34,10 @@ public class LibGpiodDriver : UnixDriver
         IntPtr libgpiodVersionPtr = Interop.libgpiod.gpiod_version_string();
         string? libgpiodVersionMatch = Marshal.PtrToStringAnsi(libgpiodVersionPtr);
 
-        if (libgpiodVersionMatch is object)
+        if (libgpiodVersionMatch is not null)
         {
             Version libgpiodVersion = new Version(libgpiodVersionMatch);
-            return (libgpiodVersion.Major >= 1 && libgpiodVersion.Minor >= 5);
+            return libgpiodVersion.Major >= 1 && libgpiodVersion.Minor >= 5;
         }
 
         return false;

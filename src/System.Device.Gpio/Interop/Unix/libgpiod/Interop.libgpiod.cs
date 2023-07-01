@@ -16,21 +16,21 @@ internal partial class Interop
     internal partial class libgpiod
     {
         private const string LibgpiodLibrary = "libgpiod";
-        internal static IntPtr InvalidHandleValue = new IntPtr(-1);
+        internal static NativeLong InvalidHandleValue = new NativeLong(-1);
 
         /// <summary>
         /// Release all resources allocated for the gpiochip iterator and close the most recently opened gpiochip(if any).
         /// </summary>
         /// <param name="iter">The gpiochip iterator object</param>
         [DllImport(LibgpiodLibrary)]
-        internal static extern void gpiod_chip_iter_free(IntPtr iter);
+        internal static extern void gpiod_chip_iter_free(NativeLong iter);
 
         /// <summary>
         /// Close a GPIO chip handle and release all allocated resources.
         /// </summary>
         /// <param name="chip">The GPIO chip pointer</param>
         [DllImport(LibgpiodLibrary)]
-        internal static extern void gpiod_chip_close(IntPtr chip);
+        internal static extern void gpiod_chip_close(NativeLong chip);
 
         /// <summary>
         /// Get the number of GPIO lines exposed by this chip.
@@ -111,7 +111,7 @@ internal partial class Interop
         /// This does NOT invalidate the line handle. This only releases the lock, so that a gpiod_line_request_input/gpiod_line_request_output can be called again.
         /// </remarks>
         [DllImport(LibgpiodLibrary)]
-        internal static extern void gpiod_line_release(IntPtr lineHandle);
+        internal static extern void gpiod_line_release(NativeLong lineHandle);
 
         /// <summary>
         /// Get the direction of the pin (input or output)
@@ -168,7 +168,7 @@ internal partial class Interop
         /// </summary>
         /// <returns>Human-readable string containing the library version.</returns>
         [DllImport(LibgpiodLibrary, SetLastError = true)]
-        internal static extern IntPtr gpiod_version_string();
+        internal static extern NativeLong gpiod_version_string();
     }
 }
 

@@ -121,7 +121,7 @@ namespace System.Device
             if (ident > MaximumRecursionDepth)
             {
                 output.Append(new string(' ', ident));
-                output.AppendLine($"... (further levels skipped, possible loop in device tree)");
+                output.AppendLine("... (further levels skipped, possible loop in device tree)");
                 return;
             }
 

@@ -10,7 +10,7 @@ namespace System.Device.Gpio;
 /// <summary>
 /// Identification of Raspberry Pi board models
 /// </summary>
-internal class RaspberryBoardInfo
+internal sealed class RaspberryBoardInfo
 {
     /// <summary>
     /// The Raspberry Pi model.
@@ -116,7 +116,7 @@ internal class RaspberryBoardInfo
     {
         _settings = settings;
 
-        ProcessorName = _settings.TryGetValue("Hardware", out string? hardware) && hardware is object ? hardware : string.Empty;
+        ProcessorName = _settings.TryGetValue("Hardware", out string? hardware) && hardware is { } ? hardware : string.Empty;
 
         if (_settings.TryGetValue("Revision", out string? revision)
             && revision is { Length: > 0 }
@@ -226,7 +226,7 @@ internal class RaspberryBoardInfo
         {
             const string filePath = "/proc/cpuinfo";
 
-            var cpuInfo = File.ReadAllLines(filePath);
+            var cpuInfo = File.ReadLines(filePath);
             var settings = new Dictionary<string, string>();
             var suffix = string.Empty;
 
