@@ -88,9 +88,7 @@ namespace System.Device.Analog
                 throw new NotSupportedException($"Pin {pinNumber} is not supporting analog input.");
             }
 
-            int logicalPinNumber = ConvertPinNumberToLogicalNumberingScheme(pinNumber);
-
-            if (_openPins.Any(x => x.PinNumber == pinNumber))
+            if (IsPinOpen(pinNumber, out int logicalPinNumber))
             {
                 throw new InvalidOperationException("The selected pin is already open.");
             }
@@ -114,8 +112,14 @@ namespace System.Device.Analog
         /// <returns>The status if the pin is open or closed.</returns>
         public virtual bool IsPinOpen(int pinNumber)
         {
-            int logicalPinNumber = ConvertPinNumberToLogicalNumberingScheme(pinNumber);
-            return _openPins.Any(x => x.PinNumber == logicalPinNumber);
+            return IsPinOpen(pinNumber, out _);
+        }
+
+        private bool IsPinOpen(int pinNumber, out int logicalPinNumber)
+        {
+            int lpn = ConvertPinNumberToLogicalNumberingScheme(pinNumber);
+            logicalPinNumber = lpn;
+            return _openPins.FindIndex(x => x.PinNumber == lpn) >= 0;
         }
 
         /// <summary>

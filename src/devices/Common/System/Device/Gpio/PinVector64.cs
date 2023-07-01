@@ -43,7 +43,7 @@ namespace System.Device.Gpio
 
             foreach ((int pin, PinValue value) in pinValues)
             {
-                if (pin < 0 || pin >= sizeof(ulong) * 8)
+                if ((uint)pin >= sizeof(ulong) * 8)
                 {
                     throw new ArgumentOutOfRangeException(nameof(pinValues));
                 }

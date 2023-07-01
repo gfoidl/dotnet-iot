@@ -11,12 +11,10 @@ namespace System.Device.Spi
     /// </summary>
     public static class SpiBusInfo
     {
-        private static int s_bufferSize = GetBufferSize();
-
         /// <summary>
         /// Buffer size assigned to the SPI bus or -1 if the buffer size is not available.
         /// </summary>
-        public static int BufferSize => s_bufferSize;
+        public static int BufferSize { get; } = GetBufferSize();
 
         private static int GetBufferSize()
         {

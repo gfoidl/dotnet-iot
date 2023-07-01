@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 partial class Interop
 {
-    public class ThreadHelper
+    public static class ThreadHelper
     {
         public static bool SetCurrentThreadHighPriority()
         {
